@@ -31,6 +31,9 @@ macro_rules! lsp_request {
     ("workspace/symbol") => {
         $crate::request::WorkspaceSymbolRequest
     };
+    ("workspaceSymbol/resolve") => {
+        $crate::request::WorkspaceSymbolResolve
+    };
     ("workspace/executeCommand") => {
         $crate::request::ExecuteCommand
     };
@@ -498,7 +501,7 @@ impl Request for CodeActionRequest {
 /// This is usually used to compute the `edit` property of a code action to avoid its unnecessary computation
 /// during the `textDocument/codeAction` request.
 ///
-/// since 3.16.0
+/// @since 3.16.0
 #[derive(Debug)]
 pub enum CodeActionResolveRequest {}
 
@@ -661,7 +664,7 @@ impl Request for WorkspaceFoldersRequest {
 }
 
 /// The `window/workDoneProgress/create` request is sent from the server
-/// to the clientto ask the client to create a work done progress.
+/// to the client to ask the client to create a work done progress.
 #[derive(Debug)]
 pub enum WorkDoneProgressCreate {}
 
@@ -919,7 +922,7 @@ mod test {
 
     macro_rules! check_macro {
         ($name:tt) => {
-            // check whethe the macro name matches the method
+            // check whether the macro name matches the method
             assert_eq!(<lsp_request!($name) as Request>::METHOD, $name);
             // test whether type checking passes for each component
             fake_call::<lsp_request!($name)>();
@@ -993,6 +996,7 @@ mod test {
         check_macro!("inlayHint/resolve");
         check_macro!("typeHierarchy/subtypes");
         check_macro!("typeHierarchy/supertypes");
+        check_macro!("workspaceSymbol/resolve");
     }
 
     #[test]
